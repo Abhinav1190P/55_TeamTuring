@@ -23,18 +23,48 @@ print(f"\tIP Address: {ip_address}")
 
 w = whois.whois(target)
 
-
 company_name  = w.registrar
+
 server = w.whois_server
+
 country = w.country
+
 state = w.state
+
 org = w.org
-creation_date = w.creation_date[0]
-expiration_date = w.expiration_date[0]
+
+if company_name == None:
+	company_name = "None"
+
+if server == None:
+	server = "None"
+
+if country == None:
+	country = "None"
+
+if state == None:
+	state = "None"
+
+if org == None:
+	org = "None"
+
+
+#erver = w.whois_server
+#country = w.country
+#state = w.state
+#org = w.orgs
+
+
+##creation_date = w.creation_date[0]
+##expiration_date = w.expiration_date[0]
+
+nmapData = []
+
 
 f = open(f'whois_{target}.txt','w')
 f.write(company_name+'\n'+server+'\n'+country+'\n'+state+'\n'+org+'\n')
 f.close()
+
 
 def nmapScan():
 	res=scanner.scan(hosts=ip_address,arguments="--script dns-brute");
@@ -43,10 +73,12 @@ def nmapScan():
 	oports=res['scan'][ip_address]['tcp'];
 	l=len(res['scan'][ip_address]['tcp']);
 	for port in oports:
-		print("\t",port, oports[port]['name'], oports[port]['state'])
-		print("\t",datetime.datetime.now())
+		nmapData.append(str(port) + " " + str(oports[port]['name']) + " " + str(oports[port]['state']))
+		nmapData.append(str(datetime.datetime.now()))
 
 nmapScan()
+
+
 # while(True):
 #     nmapScan()
 #     time.sleep(20)
